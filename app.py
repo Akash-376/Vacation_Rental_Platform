@@ -88,6 +88,18 @@ def create_property():
 
     return jsonify({'property_id': str(property_id)}), 201
 
+# get all properties
+@app.route('/properties', methods=['GET'])
+def get_All_properties():
+    propertyList = list(db.properties.find())
+    if propertyList:
+        for property in propertyList:
+            property["_id"] = str(property["_id"])
+
+        return jsonify(propertyList), 200
+    else:
+        return jsonify({'error': 'Property not found'}), 404
+
 # get property by Id
 @app.route('/properties/<property_id>', methods=['GET'])
 def get_property(property_id):
@@ -124,6 +136,17 @@ def get_guest(guest_id):
         return jsonify(guest), 200
     else:
         return jsonify({'error': 'Guest not found'}), 404
+
+
+# get guest_id by email (host_id is needed in frontend to add property)
+@app.route('/guestemail/<email>', methods=['GET'])
+def get_guestId(email):
+    guest = db.guests.find_one({'email': email})
+    if guest:
+        guest["_id"] = str(guest["_id"])
+        return jsonify({'guest_id' :guest["_id"]}), 200
+    else:
+        return jsonify({'error': 'guest not found'}), 404
 
 
 # Guest booking route
