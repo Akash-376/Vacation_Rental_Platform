@@ -22,6 +22,7 @@ db = client['hotel_renting']
 @app.route('/hosts', methods=['POST'])
 def create_host():
     data = request.json
+    data['properties'] = [] # initially host's properties would we empty list
     email = data.get('email')
     # print(email)
 
@@ -40,6 +41,17 @@ def get_host(host_id):
     if host:
         host["_id"] = str(host["_id"])
         return jsonify(host), 200
+    else:
+        return jsonify({'error': 'Host not found'}), 404
+
+
+# get host_id by email (host_id is needed in frontend to add property)
+@app.route('/hostemail/<email>', methods=['GET'])
+def get_hostId(email):
+    host = db.hosts.find_one({'email': email})
+    if host:
+        host["_id"] = str(host["_id"])
+        return jsonify({'host_id' :host["_id"]}), 200
     else:
         return jsonify({'error': 'Host not found'}), 404
 
@@ -181,6 +193,44 @@ def checkout(booking_id):
 
 
 # Implement routes for updating and deleting bookings
+
+
+
+
+
+
+
+# Endpoint for admin login
+@app.route('/host/login', methods=['POST'])
+def admin_login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    # Validate admin credentials against the database
+    host = db.hosts.find_one({'email': email, 'password': password})
+    if host:
+        return jsonify({'email': email, 'role': 'host'}), 200
+    else:
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+
+
+
+
+# Endpoint for guest login
+@app.route('/guest/login', methods=['POST'])
+def guest_login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    # Validate guest credentials against the database
+    guest = db.guests.find_one({'email': email, 'password': password})
+    if guest:
+        return jsonify({'email': email, 'role': 'guest'}), 200
+    else:
+        return jsonify({'error': 'Invalid credentials'}), 401
 
 
 
