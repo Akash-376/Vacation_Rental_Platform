@@ -45,7 +45,7 @@ export default {
     },
     methods: {
         login() {
-            
+
             const endpoint = this.getEndpoint();
             axios.post(endpoint, this.credentials)
                 .then(response => {
@@ -75,7 +75,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #container {
     width: 40%;
     margin: 10px auto;

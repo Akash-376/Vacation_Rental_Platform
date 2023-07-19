@@ -3,8 +3,10 @@
   <!-- <HostComp msg="Welcome Host"/> -->
   <div id="nav">
     <router-link class="nav" to="/registerhost">Register host</router-link>
+    <router-link class="nav" to="/addProperty">Add Property</router-link>
+    <router-link class="nav" to="/">Properties</router-link>
     <router-link class="nav" to="/login">Login</router-link>
-    <!-- <router-link class="nav" to="/addProperty">Add Property</router-link> -->
+    <router-link class="nav" to="/logout">Logout</router-link>
   </div>
   <router-view />
 </template>

@@ -176,7 +176,6 @@ textarea,
 select {
     width: 97%;
     padding: 8px;
-    /* margin-bottom: 20px; */
     border-radius: 5px;
     border: 1px solid #ccc;
 
@@ -195,9 +194,9 @@ button[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    /* Center the button horizontally */
+    
     margin: 20px auto;
-    /* Optional: Center the button within its container */
+    
     font-size: 20px;
 }
 
