@@ -1,43 +1,120 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <!-- <HostComp msg="Welcome Host"/> -->
-  <div id="nav">
-    <router-link class="nav" to="/registerhost">Register host</router-link>
-    <router-link class="nav" to="/addProperty">Add Property</router-link>
-    <router-link class="nav" to="/">Properties</router-link>
-    <router-link class="nav" to="/login">Login</router-link>
-    <router-link class="nav" to="/logout">Logout</router-link>
+  <div>
+    <div id="nav">
+      <div class="nav-logo">
+        <img alt="Vue logo" src="./assets/logo.png">
+        <h1>HOMES</h1>
+      </div>
+      <div class="nav-links">
+        <router-link v-if="role == 'host'" class="nav-link" to="/addProperty">Add Property</router-link>
+        <router-link class="nav-link" to="/">Properties</router-link>
+        <router-link v-if="role == 'guest'" class="nav-link" to="/guests/mybooking">My Bookings</router-link>
+        <router-link v-if="role == ''" class="nav-link" to="/login">Login</router-link>
+        <router-link v-if="role == 'guest' || role == 'host'" class="nav-link" to="/logout">Logout</router-link>
+        <router-link v-if="role == ''" class="nav-link" to="/registerguest">Guest Signup</router-link>
+        <router-link v-if="role == ''" class="nav-link" to="/registerhost">Host Signup</router-link>
+      </div>
+    </div>
+    <router-view />
+    <FooterComp />
   </div>
-  <router-view />
 </template>
 
+
 <script>
+import FooterComp from './components/Footre.vue'
 export default {
   name: 'App',
-  
+  data() {
+    return {
+      role: ''
+    };
+    
+  },
+  components: {
+    FooterComp
+  },
+  methods: {
+    getRole() {
+      const credentials = JSON.parse(localStorage.getItem('credentials'));
+      if (credentials) {
+        this.role = credentials['role']
+      }
+    }
+  },
+  mounted() {
+    this.getRole()
+  }
+
+
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  #nav{
-    display: flex;
-    background-color: #3498DB;
-  }
-  .nav {
-    color: rgb(47, 45, 45);
-    font-weight: bold;
-    display: flex;
-    text-decoration: none;
-    margin: 20px;
-    font-size: 20px;
-    
-    /* Add other styles as needed */
-  }
-  .nav:hover{
-    color: #D35400 ;
-  }
+<style scoped>
+#nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 5px;
+  color: #fff;
+}
+.nav-logo{
+  display: flex;
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 30px;
+}
+
+.nav-logo h1{
+  margin: 0;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.nav-logo img {
+  height: 40px;
+  width: auto;
   
 }
+
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  padding-right: 30px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  margin-left: 20px;
+}
+
+.nav-link:hover {
+  background-color: #555;
+}
+
+.nav-link.router-link-exact-active {
+  background-color: #777;
+}
+
+.login-btn {
+  background-color: #555;
+  padding: 10px 20px;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Position the login button on the right corner */
+.nav-links .login-btn {
+  margin-left: auto;
+}
+
+
 </style>

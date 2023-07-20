@@ -1,6 +1,6 @@
 <template>
     <div id="cont">
-        <h1>All Properties</h1>
+        <h1>My Bookings</h1>
         <div class="prop">
             <div v-for="property in properties" :key="property">
 
@@ -9,7 +9,7 @@
                 <h4>{{ property.location }}</h4>
                 <p>Price: ₹{{ property.price }}</p>
 
-                <button class="hoverGreen" v-on:click="bookProperty(property._id)">book now</button>
+                <button class="hoverGreen" v-on:click="checkout(property._id)">Checkout</button>
                 <p class="red">{{ property.status == "Booked" ? "Booked" : "" }}</p>
 
             </div>
@@ -20,7 +20,7 @@
 <script>
 import axios from 'axios';
 export default {
-    name: 'PropertyComp',
+    name: 'BookingComp',
     data() {
         return {
             properties: [],
@@ -28,26 +28,34 @@ export default {
         }
     },
     async mounted() {
+        await this.fetchGuestId(); // to load guest id
         await axios.get('http://127.0.0.1:5000/properties')
             .then(response => {
-                this.properties = response.data;
+                const myBookings = response.data.filter((property) => property['guest_id'] == this.guest_id)
+                this.properties = myBookings;
+                console.log(myBookings)
+                
+                // this.properties = response.data;
+            })
+            .catch (error=>{
+                console.log(error.response)
             })
         // console.warn("Api data : ", result.data);
 
     },
     methods: {
 
-        async bookProperty(property_id) {
+        async checkout(property_id) {
             try {
                 // Fetch the guest ID
-                let res = await this.fetchGuestId();  // fetchGuestId() this method retuen a promise
+                // let res = await this.fetchGuestId();  // fetchGuestId() this method retuen a promise
 
-                if (res === "ok") {
+                if (this.guest_id != '') {
                     // Guest ID fetched successfully, proceed with booking
-                    let result = await axios.post(`http://localhost:5000/guests/bookings/${this.guest_id}/${property_id}`);
+                    let result = await axios.delete(`http://localhost:5000/guests/checkout/${this.guest_id}/${property_id}`);
 
                     // Show success message and reload the page
-                    alert(`Property Booked successfully. Booking ID: ${result.data.booking_id}`);
+                    alert(result.data.message);
                     window.location.reload();
                 }
             } catch (error) {
@@ -71,7 +79,7 @@ export default {
 
                 if (role === "host") {
                     // Host is not allowed to book
-                    alert("Host not allowed to book");
+                    alert("Host not allowed");
                     return "not";
                 } else {
                     // Fetch guest ID from the server

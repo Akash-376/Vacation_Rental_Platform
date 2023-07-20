@@ -166,13 +166,16 @@ def book_property(guest_id, property_id):
         }
         booking_id = db.bookings.insert_one(booking_data).inserted_id
 
-        # Update property status to 'Booked'
-        db.properties.update_one({'_id': ObjectId(property_id)}, {'$set': {'status': 'Booked'}})
+        # Update property status to 'Booked' and add guest_id
+        db.properties.update_one(
+            {'_id': ObjectId(property_id)},
+            {'$set': {'status': 'Booked', 'guest_id': guest_id}}
+        )
 
         return jsonify({'booking_id': str(booking_id)}), 201
     # if property is already booked
     elif guest and property and property['status'] == 'Booked':
-        return jsonify({'message': 'This property is already booked. Please try another one...'}), 200
+        return jsonify({'error': 'This property is already booked. Please try another one...'}), 404
     else:
         return jsonify({'error': 'Guest or Property not found or Property is not available'}), 404
 
@@ -183,7 +186,7 @@ def checkout(booking_id):
     # guest = db.guests.find_one({'_id': ObjectId(guest_id)})
     booking = db.bookings.find_one({'_id': ObjectId(booking_id)})
     # print(guest_id)
-    print(booking_id)
+    # print(booking_id)
 
     if booking:
         # Delete the booking document
@@ -191,8 +194,35 @@ def checkout(booking_id):
 
         property_id = booking['property_id']
 
-        # Update property status to 'Available'
-        db.properties.update_one({'_id': ObjectId(property_id)}, {'$set': {'status': 'Available'}})
+        # Remove guest_id and update status to 'Available'
+        db.properties.update_one(
+            {'_id': ObjectId(property_id)},
+            {'$unset': {'guest_id': 1}, '$set': {'status': 'Available'}}
+        )
+
+        return jsonify({'message': 'Checkout successful'}), 200
+    else:
+        return jsonify({'error': 'Booking details not found'}), 404
+
+
+# Guest checkout route2
+@app.route('/guests/checkout/<guest_id>/<property_id>', methods=['DELETE'])
+def checkout2(guest_id, property_id):
+    # guest = db.guests.find_one({'_id': ObjectId(guest_id)})
+    guest = db.guests.find_one({'_id': ObjectId(guest_id)})
+    property = db.properties.find_one({'_id': ObjectId(property_id)})
+    # print(guest_id)
+    # print(booking_id)
+
+    if guest and property:
+        # Delete the booking document
+        db.bookings.delete_one({'guest_id': guest_id, 'property_id': property_id})
+
+        # Remove guest_id and update status to 'Available'
+        db.properties.update_one(
+            {'_id': ObjectId(property_id)},
+            {'$unset': {'guest_id': 1}, '$set': {'status': 'Available'}}
+        )
 
         return jsonify({'message': 'Checkout successful'}), 200
     else:

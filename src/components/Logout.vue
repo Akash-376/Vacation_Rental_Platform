@@ -12,7 +12,7 @@
                 localStorage.removeItem('credentials');
 
                 // Optionally, you can redirect to the login page or perform any other desired action
-                window.location = '/login';
+                window.location = '/';
             }
         },
         created(){

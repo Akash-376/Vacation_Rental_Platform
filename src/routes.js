@@ -4,6 +4,8 @@ import LoginComp from './components/Login.vue'
 import AddPropertyComp from './components/AddProperty.vue'
 import PropertyComp from './components/Properties.vue'
 import LogoutComp from './components/Logout.vue'
+import RegisterGuestComp from './components/guestRegistration.vue'
+import BookingComp from './components/MyBookings.vue'
 
 const routes = [
     {
@@ -30,6 +32,16 @@ const routes = [
         name:'Logout',
         path: '/logout',
         component: LogoutComp
+    },
+    {
+        name:'registerGuest',
+        path: '/registerguest',
+        component: RegisterGuestComp
+    },
+    {
+        name:'MyBooking',
+        path: '/guests/mybooking',
+        component: BookingComp
     }
 ]
 

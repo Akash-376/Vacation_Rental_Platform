@@ -3,49 +3,43 @@
 
 
         <div id="container">
-            <h1>Register Host</h1>
-            <form @submit.prevent="registerHost">
+            <h1>Guest Signup</h1>
+            <form @submit.prevent="registerGuest">
                 <label for="name">Name</label>
-                <input type="text" id="name" v-model="hostData.name" required>
+                <input type="text" id="name" v-model="guestData.name" required>
+                
+                <label for="email">Email</label>
+                <input type="email" id="email" v-model="guestData.email" required>
 
                 <label for="mobile">Mobile</label>
-                <input type="text" id="mobile" v-model="hostData.mobile" required>
-
-                <label for="email">Email</label>
-                <input type="email" id="email" v-model="hostData.email" required>
+                <input type="text" id="mobile" v-model="guestData.mobile" required>
 
                 <label for="password">Password</label>
-                <input type="password" id="password" v-model="hostData.password" required>
+                <input type="password" id="password" v-model="guestData.password" required>
 
-                <label for="status">Status</label>
-                <input type="status" id="status" v-model="hostData.status" readonly>
+                <label for="address">Address</label>
+                <input type="text" id="address" v-model="guestData.address" required>
 
 
                 <label for="gender">Gender</label>
                 <div class="radio">
 
                     <div>
-                        <input type="radio" id="male" value="Male" v-model="hostData.gender">
+                        <input type="radio" id="male" value="Male" v-model="guestData.gender">
                         <label for="male">Male</label>
                     </div>
                     <div>
-                        <input type="radio" id="female" value="Female" v-model="hostData.gender">
+                        <input type="radio" id="female" value="Female" v-model="guestData.gender">
                         <label for="female">Female</label>
                     </div>
 
                 </div>
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" v-model="guestData.dob" :max="getCurrentDate()" required>
 
-                <!-- <input type="text" id="location" v-model="hostData.location" required> -->
 
-                
-
-                
-
-                <label for="about">About</label>
-                <textarea id="about" v-model="hostData.about" required></textarea>
-
-                <label for="hostingSince">Hosting Since</label>
-                <input type="date" id="hostingSince" v-model="hostData.hosting_since" :max="getCurrentDate()" required>
+                <label for="about">Bio</label>
+                <textarea id="about" v-model="guestData.about" required></textarea>
 
                 <button type="submit">Register</button>
             </form>
@@ -56,30 +50,31 @@
 <script>
 import axios from 'axios'
 export default {
-    name: "HostComp",
+    name: "RegisterGuestComp",
     data() {
         return {
-            hostData: {
+            guestData: {
                 name: "",
                 mobile: "",
                 email: "",
                 password: "",
-                status: "Active",
+                address:"",
                 gender: "",
                 about: "",
-                hosting_since: ""
+                dob:""
+                
             }
         };
     },
     methods: {
-        registerHost() {
+        registerGuest() {
             
-            axios.post('http://localhost:5000/hosts', this.hostData)
+            axios.post('http://localhost:5000/guests', this.guestData)
                 .then(response => {
                     // Handle the response from the server
                     // Optionally, you can display a success message or redirect to a different page
-                    const hostId = response.data.host_id;
-                    alert("Added! with host ID "+ hostId)
+                    const guestId = response.data.guest_id;
+                    alert("Added! with guest ID "+ guestId)
                     window.location = '/'
                 })
                 .catch(error => {
@@ -90,7 +85,7 @@ export default {
         },
         getCurrentDate() {
             const today = new Date();
-            const year = today.getFullYear();
+            const year = today.getFullYear() -15; // to prevent rent house below 15 years old guys
             let month = today.getMonth() + 1;
             let day = today.getDate();
 
@@ -160,7 +155,7 @@ label {
     background-color: rgb(242, 234, 234);
 }
 
-#hostingSince {
+#dob {
     font-size: 20px;
     padding: 5px;
 }

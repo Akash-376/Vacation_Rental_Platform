@@ -66,59 +66,52 @@ export default {
                 location: '',
                 property_type: '',
                 description: '',
-                price: ''
-            }
+                price: '',
+            },
         };
     },
     methods: {
-        registerProperty() {
-            let res = this.fetchHostId();
-            if(res=="ok"){
-
+        async registerProperty() {
+            const res = await this.fetchHostId();
+            if (res === 'ok') {
                 axios
                     .post('http://localhost:5000/properties', this.propertyData)
-                    .then(response => {
+                    .then((response) => {
                         alert(`Property added successfully. Property ID: ${response.data.property_id}`);
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         alert(`Error: ${error.response.data.error}`);
                     });
             }
         },
-        fetchHostId() {
+        async fetchHostId() {
             // parsing localstorage data
             const credentials = JSON.parse(localStorage.getItem('credentials'));
 
-            if(credentials){
-
+            if (credentials) {
                 const email = credentials['email'];
                 const role = credentials['role'];
 
-                if(role=='guest'){
-                    alert("Guest are not allowed to add property")
-                        return "not"
-                }else{
-
-                    axios
-                        .get(`http://localhost:5000/hostemail/${email}`)
-                        .then(response => {
-                            this.propertyData.host_id = response.data.host_id;
-                            return "ok"
-                        })
-                        .catch(error => {
-                            alert(`Error: ${error.response.data.error}`);
-                            return "not"
-                        });
+                if (role === 'guest') {
+                    alert("Guests are not allowed to add properties");
+                    return 'not';
+                } else {
+                    try {
+                        const response = await axios.get(`http://localhost:5000/hostemail/${email}`);
+                        this.propertyData.host_id = response.data.host_id;
+                        return 'ok'; // Correctly returning 'ok' if host ID is fetched successfully
+                    } catch (error) {
+                        alert(`Error: ${error.response.data.error}`);
+                        return 'not';
+                    }
                 }
-            }else{
-                alert("Please login...")
-                window.location = '/login'
-                return "not"
+            } else {
+                alert('Please login...');
+                window.location = '/login';
+                return 'not';
             }
-
-        }
+        },
     },
-    
 };
 </script>
 
@@ -126,59 +119,59 @@ export default {
 #body {
     margin: 0;
     padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 89vh;
-  background-image: url('https://media.istockphoto.com/id/104731717/photo/luxury-resort.jpg?s=612x612&w=0&k=20&c=cODMSPbYyrn1FHake1xYz9M8r15iOfGz9Aosy9Db7mI=');
-  background-size: cover;
-  background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 89vh;
+    background-image: url('https://media.istockphoto.com/id/104731717/photo/luxury-resort.jpg?s=612x612&w=0&k=20&c=cODMSPbYyrn1FHake1xYz9M8r15iOfGz9Aosy9Db7mI=');
+    background-size: cover;
+    background-position: center;
 }
 
 #container {
-  width: 33%;
-  padding: 20px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  margin:auto;
+    width: 33%;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin: auto;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 label {
-  display: block;
-  font-weight: bold;
-  margin-top: 10px;
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 input,
 select,
 textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  margin-top: 5px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
 }
 
 button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #4caf50;
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
 button:hover {
-  background-color: #45a049;
+    background-color: #45a049;
 }
 </style>

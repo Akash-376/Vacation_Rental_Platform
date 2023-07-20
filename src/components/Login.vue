@@ -51,7 +51,7 @@ export default {
                 .then(response => {
                     localStorage.setItem('credentials', JSON.stringify(response.data));
                     alert("Loggin successful")
-                    // window.location = '/registerhost'
+                    window.location = '/'
                 })
                 .catch(error => {
                     
@@ -61,16 +61,7 @@ export default {
         getEndpoint() {
             return `http://localhost:5000/${this.role}/login`;
         },
-        // redirectToDashboard(role) {
-        //     // Redirect to the appropriate dashboard based on the user's role
-        //     if (role === 'host') {
-        //         // Redirect to the admin dashboard
-        //         this.$router.push('/admin/dashboard');
-        //     } else if (role === 'guest') {
-        //         // Redirect to the guest dashboard
-        //         this.$router.push('/guest/dashboard');
-        //     }
-        // }
+        
     }
 };
 </script>
