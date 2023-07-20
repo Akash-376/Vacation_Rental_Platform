@@ -6,8 +6,8 @@
         <h1>HOMES</h1>
       </div>
       <div class="nav-links">
-        <router-link v-if="role == 'host'" class="nav-link" to="/addProperty">Add Property</router-link>
         <router-link class="nav-link" to="/">Properties</router-link>
+        <router-link v-if="role == 'host'" class="nav-link" to="/addProperty">Add Property</router-link>
         <router-link v-if="role == 'guest'" class="nav-link" to="/guests/mybooking">My Bookings</router-link>
         <router-link v-if="role == ''" class="nav-link" to="/login">Login</router-link>
         <router-link v-if="role == 'guest' || role == 'host'" class="nav-link" to="/logout">Logout</router-link>

@@ -54,6 +54,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
     name: 'AddPropertyComp',
@@ -77,10 +78,30 @@ export default {
                 axios
                     .post('http://localhost:5000/properties', this.propertyData)
                     .then((response) => {
-                        alert(`Property added successfully. Property ID: ${response.data.property_id}`);
+
+                        Swal.fire({
+                            title: 'Property added !',
+                            text: 'Property ID: ' + response.data.property_id,
+                            icon: 'success',
+                            showConfirmButton: false, // Remove the 'OK' button
+                            timer: 2500, // Set the timer for 2 seconds (adjust as needed)
+                            willClose: () => {
+                                window.location = '/'; // Redirect after the animation completes
+                            }
+                        });
+
+                        // alert(`Property added successfully. Property ID: ${response.data.property_id}`);
                     })
                     .catch((error) => {
-                        alert(`Error: ${error.response.data.error}`);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: error.response.data.error,
+                            confirmButtonText: 'Try again',
+                        })
+
+                        // alert(`Error: ${error.response.data.error}`);
                     });
             }
         },

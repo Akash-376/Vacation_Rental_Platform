@@ -32,6 +32,7 @@
   
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 export default {
     name: 'LoginComp',
     data() {
@@ -50,18 +51,36 @@ export default {
             axios.post(endpoint, this.credentials)
                 .then(response => {
                     localStorage.setItem('credentials', JSON.stringify(response.data));
-                    alert("Loggin successful")
-                    window.location = '/'
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Logged In Successfully !',
+                        icon: 'success',
+                        showConfirmButton: false, // Remove the 'OK' button
+                        timer: 2000, // Set the timer for 2 seconds (adjust as needed)
+                        willClose: () => {
+                            window.location = '/'; // Redirect after the animation completes
+                        }
+                    });
+
+
                 })
                 .catch(error => {
-                    
-                    alert("Error: " + error.response.data.error);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data.error,
+                        confirmButtonText: 'Try again',
+                        footer: '<a href="/">Go to home page</a>'
+                    })
+
+                    // alert("Error: " + error.response.data.error);
                 });
         },
         getEndpoint() {
             return `http://localhost:5000/${this.role}/login`;
         },
-        
+
     }
 };
 </script>
