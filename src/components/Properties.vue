@@ -19,6 +19,7 @@
     
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 export default {
     name: 'PropertyComp',
     data() {
@@ -47,17 +48,46 @@ export default {
                     let result = await axios.post(`http://localhost:5000/guests/bookings/${this.guest_id}/${property_id}`);
 
                     // Show success message and reload the page
-                    alert(`Property Booked successfully. Booking ID: ${result.data.booking_id}`);
-                    window.location.reload();
+
+                    Swal.fire({
+                        title: 'Congratulations! Booking successful',
+                        text: 'Booking ID: ' + result.data.booking_id,
+                        icon: 'success',
+                        showConfirmButton: true, // Remove the 'OK' button
+                        confirmButtonText: 'OK',
+                        
+                    }).then(result => {
+                        if(result.isConfirmed){
+                            window.location.reload();
+                        }
+                    })
                 }
             } catch (error) {
                 // Handle any errors that occurred during the booking process
                 if (error.response && error.response.data && error.response.data.error) {
                     // Display the specific error message from the server response
-                    alert(`Error: ${error.response.data.error}`);
+
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: error.response.data.error,
+                        icon: 'error',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+
+                    })
+                    // alert(`Error: ${error.response.data.error}`);
                 } else {
                     // Display a generic error message
-                    alert("An error occurred. Please try again later.");
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: `Something went wrong!`,
+                        icon: 'error',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Try again',
+
+                    })
+
+                    // alert("An error occurred. Please try again later.");
                 }
             }
         },
@@ -71,7 +101,14 @@ export default {
 
                 if (role === "host") {
                     // Host is not allowed to book
-                    alert("Host not allowed to book");
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: `Host not allowed to book`,
+                        icon: 'error',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Try again',
+
+                    })
                     return "not";
                 } else {
                     // Fetch guest ID from the server
@@ -80,15 +117,32 @@ export default {
                         this.guest_id = response.data.guest_id;
                         return "ok";
                     } catch (error) {
-                        alert(`Error: ${error.message}`);
-                        window.location = '/login';
+
+                        Swal.fire({
+                            title: 'Oops...',
+                            text: error.message,
+                            icon: 'error',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Try again',
+
+                        }).then(result => {
+                            if (result.isConfirmed) window.location = '/login';
+                        })
                         return "not";
                     }
                 }
             } else {
                 // Guest is not logged in
-                alert("Please login...");
-                window.location = '/login';
+                Swal.fire({
+                    title: 'Oops...',
+                    text: 'Please login...',
+                    icon: 'error',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Try again',
+
+                }).then(result => {
+                    if (result.isConfirmed) window.location = '/login';
+                })
                 return "not";
             }
         },
@@ -107,7 +161,10 @@ export default {
 .prop {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
+    grid-gap: 20px;
+}
+.prop div{
+    margin-bottom: 50px;
 }
 
 .prop h3 {
@@ -149,6 +206,7 @@ button {
 
 .hoverGreen:hover {
     color: green;
+    border: 2px solid #333;
 }
 
 .hoverOrange {

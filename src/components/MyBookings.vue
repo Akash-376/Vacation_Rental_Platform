@@ -19,6 +19,7 @@
     
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 export default {
     name: 'BookingComp',
     data() {
@@ -33,30 +34,45 @@ export default {
             .then(response => {
                 const myBookings = response.data.filter((property) => property['guest_id'] == this.guest_id)
                 this.properties = myBookings;
-                console.log(myBookings)
-                
-                // this.properties = response.data;
             })
-            .catch (error=>{
+            .catch(error => {
                 console.log(error.response)
             })
-        // console.warn("Api data : ", result.data);
 
     },
     methods: {
 
         async checkout(property_id) {
             try {
-                // Fetch the guest ID
-                // let res = await this.fetchGuestId();  // fetchGuestId() this method retuen a promise
+                const result = await Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                });
 
-                if (this.guest_id != '') {
-                    // Guest ID fetched successfully, proceed with booking
-                    let result = await axios.delete(`http://localhost:5000/guests/checkout/${this.guest_id}/${property_id}`);
+                if (result.isConfirmed) {
+                    // Fetch the guest ID
+                    const res = await this.fetchGuestId();
 
-                    // Show success message and reload the page
-                    alert(result.data.message);
-                    window.location.reload();
+                    if (res === "ok") {
+                        // Guest ID fetched successfully, proceed with booking
+                        const response = await axios.delete(`http://localhost:5000/guests/checkout/${this.guest_id}/${property_id}`);
+
+                        // Show success message and reload the page
+                        await Swal.fire({
+                            title: response.data.message,
+                            // text: response.data.message,
+                            icon: 'success',
+                            showConfirmButton: true, // Remove the 'OK' button
+                            confirmButtonText: 'OK',
+                        });
+
+                        window.location.reload();
+                    }
                 }
             } catch (error) {
                 // Handle any errors that occurred during the booking process
@@ -157,6 +173,7 @@ button {
 
 .hoverGreen:hover {
     color: green;
+    border: 2px solid #333;
 }
 
 .hoverOrange {

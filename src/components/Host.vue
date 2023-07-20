@@ -37,9 +37,9 @@
 
                 <!-- <input type="text" id="location" v-model="hostData.location" required> -->
 
-                
 
-                
+
+
 
                 <label for="about">About</label>
                 <textarea id="about" v-model="hostData.about" required></textarea>
@@ -55,6 +55,7 @@
   
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2';
 export default {
     name: "HostComp",
     data() {
@@ -73,19 +74,41 @@ export default {
     },
     methods: {
         registerHost() {
-            
+
             axios.post('http://localhost:5000/hosts', this.hostData)
                 .then(response => {
                     // Handle the response from the server
                     // Optionally, you can display a success message or redirect to a different page
                     const hostId = response.data.host_id;
-                    alert("Added! with host ID "+ hostId)
-                    window.location = '/'
+
+                    Swal.fire({
+                        title: 'Host Added!',
+                        text: "Host ID : " + hostId,
+                        icon: 'success',
+                        showConfirmButton: false, // Remove the 'OK' button
+                        timer: 2500, // Set the timer for 2 seconds (adjust as needed)
+                        willClose: () => {
+                            window.location = '/'; // Redirect after the animation completes
+                        }
+                    });
+
+
+
+                    // alert("Added! with host ID "+ hostId)
+                    // window.location = '/'
                 })
                 .catch(error => {
                     // Handle any errors that occurred during the registration process
                     // Optionally, you can display an error message to the user
-                    alert(error.response.data.error) 
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data.error,
+                        footer: '<a href="/">go to home page</a>'
+                    })
+
+                    // alert(error.response.data.error)
                 });
         },
         getCurrentDate() {
@@ -109,19 +132,13 @@ export default {
 
 <style scoped>
 
-/* #body {
-    background-image: url('https://images7.alphacoders.com/436/436350.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-} */
 #container {
     width: 40%;
     margin: 10px auto;
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-color: white;
-    
+
 }
 
 #container h1 {
@@ -195,9 +212,9 @@ button[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    
+
     margin: 20px auto;
-    
+
     font-size: 20px;
 }
 

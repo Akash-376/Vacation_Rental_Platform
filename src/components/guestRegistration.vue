@@ -7,7 +7,7 @@
             <form @submit.prevent="registerGuest">
                 <label for="name">Name</label>
                 <input type="text" id="name" v-model="guestData.name" required>
-                
+
                 <label for="email">Email</label>
                 <input type="email" id="email" v-model="guestData.email" required>
 
@@ -49,6 +49,7 @@
   
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2';
 export default {
     name: "RegisterGuestComp",
     data() {
@@ -58,34 +59,53 @@ export default {
                 mobile: "",
                 email: "",
                 password: "",
-                address:"",
+                address: "",
                 gender: "",
                 about: "",
-                dob:""
-                
+                dob: ""
+
             }
         };
     },
     methods: {
         registerGuest() {
-            
+
             axios.post('http://localhost:5000/guests', this.guestData)
                 .then(response => {
                     // Handle the response from the server
                     // Optionally, you can display a success message or redirect to a different page
                     const guestId = response.data.guest_id;
-                    alert("Added! with guest ID "+ guestId)
-                    window.location = '/'
+
+                    Swal.fire({
+                        title: 'Registration successful !',
+                        text: "Added! with guest ID " + guestId,
+                        icon: 'success',
+                        showConfirmButton: false, // Remove the 'OK' button
+                        timer: 2000, // Set the timer for 2 seconds (adjust as needed)
+                        willClose: () => {
+                            window.location = '/'; // Redirect after the animation completes
+                        }
+                    });
+
+                    // alert("Added! with guest ID "+ guestId)
+                    // window.location = '/'
                 })
                 .catch(error => {
                     // Handle any errors that occurred during the registration process
                     // Optionally, you can display an error message to the user
-                    alert(error.response.data.error) 
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.response.data.error,
+                        footer: '<a href="">go to home page</a>'
+                    })
+                    // alert(error.response.data.error)
                 });
         },
         getCurrentDate() {
             const today = new Date();
-            const year = today.getFullYear() -15; // to prevent rent house below 15 years old guys
+            const year = today.getFullYear() - 15; // to prevent rent house below 15 years old guys
             let month = today.getMonth() + 1;
             let day = today.getDate();
 
@@ -103,7 +123,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* #body {
     background-image: url('https://images7.alphacoders.com/436/436350.jpg');
     background-size: cover;
@@ -116,7 +135,7 @@ export default {
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-color: white;
-    
+
 }
 
 #container h1 {
@@ -190,9 +209,9 @@ button[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    
+
     margin: 20px auto;
-    
+
     font-size: 20px;
 }
 
