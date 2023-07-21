@@ -143,10 +143,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 89vh;
+    height: 100vh;
     background-image: url('https://media.istockphoto.com/id/104731717/photo/luxury-resort.jpg?s=612x612&w=0&k=20&c=cODMSPbYyrn1FHake1xYz9M8r15iOfGz9Aosy9Db7mI=');
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
 }
 
 #container {
@@ -155,6 +156,7 @@ export default {
     background-color: #f0f0f0;
     border-radius: 5px;
     margin: auto;
+    
 }
 
 h1 {
@@ -190,6 +192,7 @@ button {
     border-radius: 4px;
     cursor: pointer;
     margin-top: 10px;
+    font-size: 20px;
 }
 
 button:hover {

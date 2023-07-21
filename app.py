@@ -7,7 +7,9 @@ from bson import ObjectId
 from flask_cors import CORS # to handle CORS policy error
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, resources={
+    r"/*":{"origins":"*"}
+})  # Enable CORS for all routes
 client = MongoClient('mongodb://localhost:27017/')
 db = client['hotel_renting']
 
@@ -54,6 +56,18 @@ def get_hostId(email):
         return jsonify({'host_id' :host["_id"]}), 200
     else:
         return jsonify({'error': 'Host not found'}), 404
+
+
+# get host by email
+@app.route('/hostnamebyemail/<email>', methods=['GET'])
+def get_hostByEmail(email):
+    host = db.hosts.find_one({'email': email})
+    
+    if host:
+        host["_id"] = str(host["_id"])
+        return jsonify(host['name']), 200
+    else:
+        return jsonify({'error': 'host not found'}), 404
 
 # Implement routes for updating and deleting hosts
 
@@ -109,6 +123,17 @@ def get_property(property_id):
         return jsonify(property), 200
     else:
         return jsonify({'error': 'Property not found'}), 404
+    
+@app.route('/property/update/<property_id>', methods=['PATCH'])
+def update_property_price(property_id):
+    query = {"_id": ObjectId(property_id)}
+    property = db.properties.find_one(query)
+    if property:
+        new_price = request.args.get('updated_price')
+        db.properties.update_one(query, {'$set': {'price':new_price}})
+        return jsonify({'message': 'Price updated successfully'})
+    return jsonify({'error': 'Property not found with this Id : '+ property_id})
+
 
 # Implement routes for updating and deleting properties
 
@@ -125,6 +150,17 @@ def create_guest():
     data = request.json
     guest_id = db.guests.insert_one(data).inserted_id
     return jsonify({'guest_id': str(guest_id)}), 201
+
+@app.route('/guests', methods=['GET'])
+def get_All_guests():
+    guests = list(db.guests.find())
+    if guests:
+        for guest in guests:
+            guest["_id"] = str(guest["_id"])
+
+        return jsonify(guests), 201
+    else:
+        return jsonify({"message": "No any guest found"}), 404
 
 
 # get guest by Id
@@ -145,6 +181,17 @@ def get_guestId(email):
     if guest:
         guest["_id"] = str(guest["_id"])
         return jsonify({'guest_id' :guest["_id"]}), 200
+    else:
+        return jsonify({'error': 'guest not found'}), 404
+
+
+# get guest by email
+@app.route('/guestbyemail/<email>', methods=['GET'])
+def get_guestByEmail(email):
+    guest = db.guests.find_one({'email': email})
+    if guest:
+        guest["_id"] = str(guest["_id"])
+        return jsonify(guest), 200
     else:
         return jsonify({'error': 'guest not found'}), 404
 

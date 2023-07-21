@@ -1,6 +1,6 @@
 <template>
     <div id="cont">
-        <h1>My Bookings</h1>
+        <h1>My Properties</h1>
         <div class="prop">
             <div v-for="property in properties" :key="property">
 
@@ -8,8 +8,9 @@
                 <h3>{{ property.name }}</h3>
                 <h4>{{ property.location }}</h4>
                 <p>Price: ₹{{ property.price }}</p>
+                <p>Property Id: <span class="green">{{ property._id }}</span></p>
 
-                <button class="hoverGreen" v-on:click="checkout(property._id)">Checkout</button>
+                <button class="hoverGreen" v-on:click="editProperty(property._id)">Edit Price</button>
                 <p class="red">{{ property.status == "Booked" ? "Booked" : "" }}</p>
 
             </div>
@@ -21,19 +22,19 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 export default {
-    name: 'BookingComp',
+    name: 'MyPropertyComp',
     data() {
         return {
             properties: [],
-            guest_id: ''
+            host_id: ''
         }
     },
     async mounted() {
-        await this.fetchGuestId(); // to load guest id
+        await this.fetchHostId(); // to load guest id
         await axios.get('http://127.0.0.1:5000/properties')
             .then(response => {
-                const myBookings = response.data.filter((property) => property['guest_id'] == this.guest_id)
-                this.properties = myBookings;
+                const myProperties = response.data.filter((property) => property['host_id'] == this.host_id)
+                this.properties = myProperties;
             })
             .catch(error => {
                 console.log(error.response)
@@ -42,11 +43,15 @@ export default {
     },
     methods: {
 
-        async checkout(property_id) {
+        isValidNumber(value) {
+            return !isNaN(value) && isFinite(value);
+        },
+
+        async editProperty(property_id) {
             try {
                 const result = await Swal.fire({
                     title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    // text: "You won't be able to revert this!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -56,22 +61,52 @@ export default {
 
                 if (result.isConfirmed) {
                     // Fetch the guest ID
-                    const res = await this.fetchGuestId();
+                    const res = await this.fetchHostId();
 
                     if (res === "ok") {
-                        // Guest ID fetched successfully, proceed with booking
-                        const response = await axios.delete(`http://localhost:5000/guests/checkout/${this.guest_id}/${property_id}`);
 
-                        // Show success message and reload the page
-                        await Swal.fire({
-                            title: response.data.message,
-                            // text: response.data.message,
-                            icon: 'success',
-                            showConfirmButton: true, // Remove the 'OK' button
+                        // sweet alert
+                        Swal.fire({
+                            title: 'Enter new price',
+                            input: 'number',
+                            inputAttributes: {
+                                autocapitalize: 'off'
+                            },
+                            showCancelButton: true,
                             confirmButtonText: 'OK',
-                        });
+                            // showLoaderOnConfirm: true,
+                            preConfirm: (newPrice) => {
+                                if (!this.isValidNumber(newPrice)) {
+                                    Swal.showValidationMessage('Invalid input. Please enter a valid number.');
+                                    
+                                }else{
 
-                        window.location.reload();
+                                    axios.patch(`http://localhost:5000/property/update/${property_id}?updated_price=${newPrice}`)
+                                        .then(response => {
+                                            if (result.isConfirmed) {
+                                                Swal.fire({
+                                                    title: response.data.message,
+                                                    icon: 'success',
+                                                    showConfirmButton: true,
+                                                    confirmButtonText: 'OK',
+
+                                                }).then(result => {
+                                                    if (result.isConfirmed) {
+                                                        window.location.reload();
+                                                    }
+                                                })
+                                            }
+                                        })
+                                        .catch(error => {
+                                            Swal.showValidationMessage(
+                                                `Request failed: ${error}`
+                                            )
+                                        })
+                                }
+                            },
+                            // allowOutsideClick: () => !Swal.isLoading()
+                        })
+
                     }
                 }
             } catch (error) {
@@ -86,22 +121,22 @@ export default {
             }
         },
 
-        async fetchGuestId() {
+        async fetchHostId() {
             // Parsing local storage data to get guest's email
             const credentials = JSON.parse(localStorage.getItem('credentials'));
             if (credentials) {
                 const email = credentials.email;
                 const role = credentials.role;
 
-                if (role === "host") {
-                    // Host is not allowed to book
-                    alert("Host not allowed");
+                if (role === "guest") {
+                    // Guest is not allowed to book
+                    alert("Guest not allowed");
                     return "not";
                 } else {
                     // Fetch guest ID from the server
                     try {
-                        const response = await axios.get(`http://localhost:5000/guestemail/${email}`);
-                        this.guest_id = response.data.guest_id;
+                        const response = await axios.get(`http://localhost:5000/hostemail/${email}`);
+                        this.host_id = response.data.host_id;
                         return "ok";
                     } catch (error) {
                         alert(`Error: ${error.message}`);
@@ -124,32 +159,33 @@ export default {
 </script>
     
 <style scoped>
-#cont h1 {
-    text-align: center;
-}
 #cont {
     margin-bottom: 50px;
     padding: 2.5%;
+}
+
+#cont h1 {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 .prop {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 10px;
-    
-
 }
-.prop div{
+
+.prop div {
     transition: 0.3s;
 }
-.prop div:hover{
+
+.prop div:hover {
     transform: scale(0.98);
 }
 
 .prop h3 {
 
     margin: 0;
-
 }
 
 .prop h4 {
@@ -183,6 +219,9 @@ button {
 
 .hoverRed:hover {
     color: red;
+}
+.green{
+    color: green;
 }
 
 .hoverGreen:hover {
