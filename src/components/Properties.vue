@@ -55,9 +55,9 @@ export default {
                         icon: 'success',
                         showConfirmButton: true, // Remove the 'OK' button
                         confirmButtonText: 'OK',
-                        
+
                     }).then(result => {
-                        if(result.isConfirmed){
+                        if (result.isConfirmed) {
                             window.location.reload();
                         }
                     })
@@ -106,7 +106,7 @@ export default {
                         text: `Host not allowed to book`,
                         icon: 'error',
                         showConfirmButton: true,
-                        confirmButtonText: 'Try again',
+                        confirmButtonText: 'OK',
 
                     })
                     return "not";
@@ -138,7 +138,7 @@ export default {
                     text: 'Please login...',
                     icon: 'error',
                     showConfirmButton: true,
-                    confirmButtonText: 'Try again',
+                    confirmButtonText: 'OK',
 
                 }).then(result => {
                     if (result.isConfirmed) window.location = '/login';
@@ -154,18 +154,30 @@ export default {
 </script>
     
 <style scoped>
+#cont{
+    width: 95%;
+    margin: auto;
+}
 #cont h1 {
     text-align: center;
+    margin: 20px;
 }
 
 .prop {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
+    
 }
-.prop div{
+.prop div {
     margin-bottom: 50px;
+    transition: 0.3s;
 }
+.prop div:hover{
+    transform: scale(0.98);
+}
+
+
 
 .prop h3 {
 
@@ -198,6 +210,7 @@ button {
     cursor: pointer;
     font-size: 20px;
     margin-top: 10px;
+    padding: 5px 10px;
 }
 
 .hoverRed:hover {
@@ -206,7 +219,10 @@ button {
 
 .hoverGreen:hover {
     color: green;
-    border: 2px solid #333;
+    border: 2px solid transparent;
+    border-image: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    border-image-slice: 1;
+
 }
 
 .hoverOrange {

@@ -82,13 +82,13 @@ export default {
                     const hostId = response.data.host_id;
 
                     Swal.fire({
-                        title: 'Host Added!',
+                        title: 'Host registered Successfully!',
                         text: "Host ID : " + hostId,
                         icon: 'success',
                         showConfirmButton: false, // Remove the 'OK' button
                         timer: 2500, // Set the timer for 2 seconds (adjust as needed)
                         willClose: () => {
-                            window.location = '/'; // Redirect after the animation completes
+                            window.location = '/login'; // Redirect after the animation completes
                         }
                     });
 

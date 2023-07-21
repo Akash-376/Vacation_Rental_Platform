@@ -13,7 +13,7 @@
                 <label for="gender">Role:</label>
                 <div class="radio">
 
-                    <div>
+                    <div >
                         <input type="radio" id="host" value="host" v-model="role">
                         <label for="host">Host</label>
                     </div>
@@ -88,10 +88,10 @@ export default {
 <style scoped>
 #container {
     width: 40%;
-    margin: 10px auto;
+    margin: 80px auto;
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    background-color: white;
+    
 
 }
 
@@ -121,6 +121,11 @@ label {
 .radio {
     display: flex;
     margin-right: 20px;
+}
+
+.radio div{
+    margin-right: 10px;
+    color: red;
 }
 
 input[type="text"],

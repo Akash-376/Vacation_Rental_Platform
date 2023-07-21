@@ -52,7 +52,7 @@
   
   <style scoped>
   .footer {
-    margin-top: 50px;
+    /* margin-top: 50px; */
     background-color: #4b4b4b;
     color: #fff;
     padding: 30px 0;
