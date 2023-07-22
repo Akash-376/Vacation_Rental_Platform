@@ -7,6 +7,7 @@ import LogoutComp from './components/Logout.vue'
 import RegisterGuestComp from './components/guestRegistration.vue'
 import BookingComp from './components/MyBookings.vue'
 import MyPropertyComp from './components/MyProperties.vue'
+import AboutUs from './components/About_us.vue'
 
 const routes = [
     {
@@ -48,6 +49,11 @@ const routes = [
         name:'MyPropertyComp',
         path: '/hosts/myProperties',
         component: MyPropertyComp
+    },
+    {
+        name:'AboutUs',
+        path: '/homes/about',
+        component: AboutUs
     }
 ]
 

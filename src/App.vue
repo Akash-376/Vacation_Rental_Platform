@@ -10,6 +10,7 @@
       <div class="nav-links">
         <!-- <router-link id="name" class="nav-link">{{name }}</router-link> -->
         <router-link class="nav-link" to="/">Properties</router-link>
+        <router-link v-if="role == ''" class="nav-link" to="/homes/about">About us</router-link>
         <router-link v-if="role == 'host'" class="nav-link" to="/addProperty">Add Property</router-link>
         <router-link v-if="role == 'host'" class="nav-link" to="/hosts/myProperties">My Properties</router-link>
         <router-link v-if="role == 'guest'" class="nav-link" to="/guests/mybooking">My Bookings</router-link>
@@ -79,7 +80,7 @@ export default {
   background-color: #333;
   padding: 5px;
   color: #fff;
-  width: 100%;
+  width: 99.3%;
   position: sticky;
   top: 0;
   z-index: 2;
