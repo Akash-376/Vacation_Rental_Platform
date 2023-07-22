@@ -24,7 +24,7 @@
 
                 </div>
 
-                <button type="submit">Login</button>
+                <button v-if="this.role!=''" type="submit">Login</button>
             </form>
         </div>
     </div>
@@ -46,7 +46,6 @@ export default {
     },
     methods: {
         login() {
-
             const endpoint = this.getEndpoint();
             axios.post(endpoint, this.credentials)
                 .then(response => {
