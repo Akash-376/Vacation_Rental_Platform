@@ -64,13 +64,14 @@ export default {
                 about: "",
                 dob: ""
 
-            }
+            },
+            baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
         };
     },
     methods: {
         registerGuest() {
 
-            axios.post('http://localhost:5000/guests', this.guestData)
+            axios.post(this.baseUrl+'guests', this.guestData)
                 .then(response => {
                     // Handle the response from the server
                     // Optionally, you can display a success message or redirect to a different page

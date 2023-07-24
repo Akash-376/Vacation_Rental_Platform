@@ -25,12 +25,13 @@ export default {
     data() {
         return {
             properties: [],
-            guest_id: ''
+            guest_id: '',
+            baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
         }
     },
     async mounted() {
         await this.fetchGuestId(); // to load guest id
-        await axios.get('http://127.0.0.1:5000/properties')
+        await axios.get(this.baseUrl+'properties')
             .then(response => {
                 const myBookings = response.data.filter((property) => property['guest_id'] == this.guest_id)
                 this.properties = myBookings;
@@ -60,7 +61,7 @@ export default {
 
                     if (res === "ok") {
                         // Guest ID fetched successfully, proceed with booking
-                        const response = await axios.delete(`http://localhost:5000/guests/checkout/${this.guest_id}/${property_id}`);
+                        const response = await axios.delete(`${this.baseUrl}guests/checkout/${this.guest_id}/${property_id}`);
 
                         // Show success message and reload the page
                         await Swal.fire({
@@ -100,7 +101,7 @@ export default {
                 } else {
                     // Fetch guest ID from the server
                     try {
-                        const response = await axios.get(`http://localhost:5000/guestemail/${email}`);
+                        const response = await axios.get(`${this.baseUrl}guestemail/${email}`);
                         this.guest_id = response.data.guest_id;
                         return "ok";
                     } catch (error) {

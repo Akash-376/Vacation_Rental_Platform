@@ -25,11 +25,12 @@ export default {
     data() {
         return {
             properties: [],
-            guest_id: ''
+            guest_id: '',
+            baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
         }
     },
     async mounted() {
-        await axios.get('http://127.0.0.1:5000/properties')
+        await axios.get(this.baseUrl+'properties')
             .then(response => {
                 this.properties = response.data;
             })
@@ -45,7 +46,7 @@ export default {
 
                 if (res === "ok") {
                     // Guest ID fetched successfully, proceed with booking
-                    let result = await axios.post(`http://localhost:5000/guests/bookings/${this.guest_id}/${property_id}`);
+                    let result = await axios.post(`${this.baseUrl}guests/bookings/${this.guest_id}/${property_id}`);
 
                     // Show success message and reload the page
 
@@ -113,7 +114,7 @@ export default {
                 } else {
                     // Fetch guest ID from the server
                     try {
-                        const response = await axios.get(`http://localhost:5000/guestemail/${email}`);
+                        const response = await axios.get(`${this.baseUrl}guestemail/${email}`);
                         this.guest_id = response.data.guest_id;
                         return "ok";
                     } catch (error) {
