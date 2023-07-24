@@ -39,6 +39,9 @@ The Frontend of the "Hotel Renting App" is developed using Vue.js, a progressive
 
 - **Booking Management:** Hosts and guests can manage their bookings, including checking availability, canceling bookings, and viewing booking details.
 
+## Demo
+Please click this link to see project demo <br>
+https://drive.google.com/file/d/1iumPze3NRtXGSe8xef5pWXxA5xnkElN9/view?usp=drive_link
 
 
 ## Getting_Started
