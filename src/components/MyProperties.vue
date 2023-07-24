@@ -45,7 +45,7 @@ export default {
     methods: {
 
         isValidNumber(value) {
-            return !isNaN(value) && isFinite(value);
+            return !isNaN(value) && isFinite(value) && value>=0;
         },
 
         async editProperty(property_id) {
