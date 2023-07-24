@@ -45,13 +45,9 @@ https://drive.google.com/file/d/1iumPze3NRtXGSe8xef5pWXxA5xnkElN9/view?usp=drive
 
 
 ## Getting_Started
-### To get started with the "Hotel Renting App", follow these steps:
-**1.** Clone the repository from GitHub. <br>
-**2.** Set up the backend by installing Python, Flask, and MongoDB.</br>
-**3.** Open this Repository with VS code or any other IDE of your choice.</br>
-**4.** Go to the ***app.py*** inside this repo and run it locally.(It will start the backend server).</br>
-**5.** click this to start frontend 'https://vacation-rental-platform.vercel.app/' </br>
-**6.** Access the app through your web browser and start exploring properties or listing your space as a host!</br>
+### To get started with the "Hotel Renting App" :
+#### click this Link 'https://vacation-rental-platform.vercel.app/' </br>
+
 
 
 ## Contact
