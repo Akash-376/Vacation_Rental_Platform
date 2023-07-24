@@ -69,13 +69,14 @@ export default {
                 gender: "",
                 about: "",
                 hosting_since: ""
-            }
+            },
+            baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
         };
     },
     methods: {
         registerHost() {
 
-            axios.post('http://localhost:5000/hosts', this.hostData)
+            axios.post(this.baseUrl+'hosts', this.hostData)
                 .then(response => {
                     // Handle the response from the server
                     // Optionally, you can display a success message or redirect to a different page

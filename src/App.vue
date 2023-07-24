@@ -34,7 +34,8 @@ export default {
   data() {
     return {
       role: '',
-      name: ''
+      name: '',
+      baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
 
     };
 
@@ -48,13 +49,13 @@ export default {
       if (credentials) {
         this.role = credentials['role']
         if (this.role == 'host') {
-          await axios.get('http://localhost:5000/hostnamebyemail/' + credentials['email'])  // endpoint changed because fetching whole document of host was throwing CORS error
+          await axios.get(this.baseUrl+'hostnamebyemail/' + credentials['email'])  // endpoint changed because fetching whole document of host was throwing CORS error
           .then(response => {
             this.name = response.data;
           })
           
         } else {
-          await axios.get('http://localhost:5000/guestbyemail/' + credentials['email'])
+          await axios.get(this.baseUrl+'guestbyemail/' + credentials['email'])
             .then(response => {
               this.name = response.data.name;
             })

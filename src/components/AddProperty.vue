@@ -69,6 +69,7 @@ export default {
                 description: '',
                 price: '',
             },
+            baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
         };
     },
     methods: {
@@ -76,7 +77,7 @@ export default {
             const res = await this.fetchHostId();
             if (res === 'ok') {
                 axios
-                    .post('http://localhost:5000/properties', this.propertyData)
+                    .post(this.baseUrl+'properties', this.propertyData)
                     .then((response) => {
 
                         Swal.fire({
@@ -118,7 +119,7 @@ export default {
                     return 'not';
                 } else {
                     try {
-                        const response = await axios.get(`http://localhost:5000/hostemail/${email}`);
+                        const response = await axios.get(`${this.baseUrl}hostemail/${email}`);
                         this.propertyData.host_id = response.data.host_id;
                         return 'ok'; // Correctly returning 'ok' if host ID is fetched successfully
                     } catch (error) {

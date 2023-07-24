@@ -41,7 +41,8 @@ export default {
                 email: '',
                 password: ''
             },
-            role: ''
+            role: '',
+            baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
         };
     },
     methods: {
@@ -77,7 +78,7 @@ export default {
                 });
         },
         getEndpoint() {
-            return `http://localhost:5000/${this.role}/login`;
+            return `${this.baseUrl+this.role}/login`;
         },
 
     }

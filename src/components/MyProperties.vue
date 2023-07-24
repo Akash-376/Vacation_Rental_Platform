@@ -26,12 +26,13 @@ export default {
     data() {
         return {
             properties: [],
-            host_id: ''
+            host_id: '',
+            baseUrl: 'https://vacation-rental-backend-ten.vercel.app/'
         }
     },
     async mounted() {
         await this.fetchHostId(); // to load guest id
-        await axios.get('http://127.0.0.1:5000/properties')
+        await axios.get(this.baseUrl+'properties')
             .then(response => {
                 const myProperties = response.data.filter((property) => property['host_id'] == this.host_id)
                 this.properties = myProperties;
@@ -81,7 +82,7 @@ export default {
                                     
                                 }else{
 
-                                    axios.patch(`http://localhost:5000/property/update/${property_id}?updated_price=${newPrice}`)
+                                    axios.patch(`${this.baseUrl}property/update/${property_id}?updated_price=${newPrice}`)
                                         .then(response => {
                                             if (result.isConfirmed) {
                                                 Swal.fire({
@@ -135,7 +136,7 @@ export default {
                 } else {
                     // Fetch guest ID from the server
                     try {
-                        const response = await axios.get(`http://localhost:5000/hostemail/${email}`);
+                        const response = await axios.get(`${this.baseUrl}hostemail/${email}`);
                         this.host_id = response.data.host_id;
                         return "ok";
                     } catch (error) {
